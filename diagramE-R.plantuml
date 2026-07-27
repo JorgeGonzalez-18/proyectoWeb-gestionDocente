@@ -1,0 +1,100 @@
+@startuml
+skinparam linetype ortho
+
+entity "profesores" as profesor #E3F2FD {
+  * id : INT <<PK>>
+  --
+  * cedula : int
+  * nombre : String
+  * primer_apellido : String
+  * segundo_apellido : String
+}
+
+entity "titulos_academicos" as titulo #E3F2FD {
+  * id : String <<PK>>
+  --
+  * profesor_id : INT <<FK>>
+  * nivel_titulo : NivelTituloEnum
+  * institucion : String
+  * anio_graduacion : int
+  * area_especializacion : String
+}
+
+entity "catalogo_atinencias" as catalogo #E3F2FD{
+  * id : String <<PK>>
+  --
+  * carrera_id : CarreraId
+  * codigo_curso : CodigoCurso
+  * version : int
+  * acuerdo_consejo : NumeroAcuerdo
+  * numero_gaceta : NumeroGaceta
+  * periodo_validez_inicio : DateTime
+  * periodo_validez_fin : DateTime
+  * especializaciones_atinentes : List<String>
+}
+
+entity "asignaciones_docentes" as asignacion #E3F2FD {
+  * id : String <<PK>>
+  --
+  * profesor_id : INT <<FK>>
+  * catalogo_id : String <<FK, nullable>>
+  * codigo_curso : CodigoCurso
+  * carrera_id : CarreraId
+  * grupo_id : GrupoId
+  * inicio_cuatrimestre_fecha : DateTime
+  * estado : EstadoAsignacionEnum
+  * version_catalogo_aplicada : int
+  * provisional_validez_futura : boolean
+  * nota_tecnica_pdf_path : String <<nullable>>
+  * nota_tecnica_fecha_limite : DateTime <<nullable>>
+  * nota_tecnica_estado : EstadoNotaTecnicaEnum <<nullable>>
+}
+
+entity "usuario" as user #FFF3E0{
+  * id : INT <<PK>>
+  --
+  * profesor_id : INT <<FK, nullable>>
+  * email : VARCHAR(150) <<UNIQUE>>
+  * password : VARCHAR(255)
+  * created_at : TIMESTAMP
+  * updated_at : TIMESTAMP
+}
+
+entity "roles" as rol #FFF3E0 {
+  * id : INT <<PK>>
+  --
+  * name : VARCHAR(50)
+  * guard_name : VARCHAR(50)
+}
+
+entity "permiso" as permiso #FFF3E0 {
+  * id : INT <<PK>>
+  --
+  * name : VARCHAR(100)
+  * guard_name : VARCHAR(50)
+}
+
+entity "model_has_roles" as model_has_roles #FFF3E0 {
+  * role_id : INT <<PK, FK>>
+  * model_id : INT <<PK, FK>> (user_id)
+  * model_type : VARCHAR(100)
+}
+
+entity "role_has_permissions" as role_has_permissions #FFF3E0 {
+  * permission_id : INT <<PK, FK>>
+  * role_id : INT <<PK, FK>>
+}
+
+' Relaciones estructurales del Dominio
+profesor ||--o{ titulo : "posee (titulosAcademicos)"
+profesor ||--o{ asignacion : "tiene (profesorId)"
+catalogo ||--o{ asignacion : "aplica (catalogo_id)"
+
+' Relaciones del Subsistema de Autenticación y Permisos (RBAC)
+profesor ||--o| user : "asocia cuenta de acceso"
+user ||--o{ model_has_roles : "asigna"
+rol ||--o{ model_has_roles : "posee rol"
+rol ||--o{ role_has_permissions : "incluye"
+permiso ||--o{ role_has_permissions : "otorga"
+
+@enduml

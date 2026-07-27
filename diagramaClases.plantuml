@@ -1,0 +1,180 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+' ==========================================
+' 1. ENUMERABLES (Tipos de datos fijos)
+' ==========================================
+enum NivelTituloEnum {
+    BACHILLERATO
+    LICENCIATURA
+    MAESTRIA
+    DOCTORADO
+}
+
+enum EstadoAsignacionEnum {
+    PROVISIONAL
+    APROBADO
+    BLOQUEADO
+    RECHAZADO
+}
+
+enum EstadoNotaTecnicaEnum {
+    PENDIENTE_RATIFICACION
+    VENCIDA
+    RATIFICADA
+}
+
+' ==========================================
+' 2. OBJETOS DE VALOR (Value Objects - VOs)
+' ==========================================
+class TituloId {
+    - value: String
+}
+
+class ProfesorId {
+    - value: int
+}
+
+class CatalogoId {
+    - value: String
+}
+
+class CarreraId {
+    - value: String
+}
+
+class CodigoCurso {
+    - value: String
+}
+
+class AsignacionId {
+    - value: String
+}
+
+class GrupoId {
+    - value: String
+}
+
+class NumeroAcuerdo {
+    - value: String
+}
+
+class NumeroGaceta {
+    - value: String
+}
+
+class DateRange {
+    - inicio: DateTime
+    - fin: DateTime
+    + esFechaValida(fecha: DateTime): boolean
+}
+
+class NotaTecnica {
+    - pdfPath: String
+    - fechaLimite: DateTime
+    - estado: EstadoNotaTecnicaEnum
+}
+
+' ==========================================
+' 3. ENTIDADES Y AGREGADOS PRINCIPALES
+' ==========================================
+class TituloAcademico {
+    - id: TituloId
+    - nivelTitulo: NivelTituloEnum
+    - institucion: String
+    - anioGraduacion: int
+    - areaEspecializacion: String
+}
+
+class Profesor {
+    - id: ProfesorId
+    - cedula: int
+    - nombre: String
+    - primerApellido: String
+    - segundoApellido: String
+    - titulosAcademicos: List<TituloAcademico>
+    + agregarTituloAcademico(titulo: TituloAcademico): void
+    + actualizarTituloAcademico(tituloId: TituloId, updatedData: TituloAcademico): void
+}
+
+class CatalogoAtinencias {
+    - id: CatalogoId
+    - carreraId: CarreraId
+    - codigoCurso: CodigoCurso
+    - version: int
+    - acuerdoConsejo: NumeroAcuerdo
+    - numeroGaceta: NumeroGaceta
+    - periodoValidez: DateRange
+    - especializacionesAtinentes: List<String>
+    + esFechaValida(date: DateTime): boolean
+    + esTituloAtinente(titulo: TituloAcademico): boolean
+}
+
+class AsignacionDocente {
+    - id: AsignacionId
+    - profesorId: ProfesorId
+    - codigoCurso: CodigoCurso
+    - carreraId: CarreraId
+    - grupoId: GrupoId
+    - inicioCuatrimestreFecha: DateTime
+    - estado: EstadoAsignacionEnum
+    - versionCatalogoAplicada: int
+    - provisionalValidezFutura: boolean
+    - notaTecnica: NotaTecnica
+    + asignarResultadoAtinencia(resultado: String): void
+    + aplicarNotaTecnica(pdfPath: String, fechaLimite: DateTime): void
+    + verificarIncumplimientoSLA(fechaActual: DateTime): void
+    + aprobarManualmente(aprobadoPorUsuarioId: String): void
+}
+
+' ==========================================
+' 4. SERVICIOS DE DOMINIO
+' ==========================================
+class ServicioVerificacionAtinencia {
+    + verificar(profesor: Profesor, catalogos: List<CatalogoAtinencias>, inicioCuatri: DateTime): String
+}
+
+' ==========================================
+' 5. PUERTOS DE DOMINIO (Interfaces / Repositorios)
+' ==========================================
+interface ProfesorRepositorioInterface {
+    + buscarPorCedula(cedula: int): Profesor
+    + guardar(profesor: Profesor): void
+}
+
+interface CatalogoAtinenciasRepositorioInterface {
+    + buscarVigente(carreraId: CarreraId, codigoCurso: CodigoCurso, fecha: DateTime): CatalogoAtinencias
+    + guardar(catalogo: CatalogoAtinencias): void
+}
+
+interface AsignacionDocenteRepositorioInterface {
+    + buscarPorId(id: AsignacionId): AsignacionDocente
+    + guardar(asignacion: AsignacionDocente): void
+}
+
+interface AuditoriaRepositorioInterface {
+    + registrar(usuario: String, accion: String, detalle: String): void
+}
+' ==========================================
+' 6. RELACIONES DEL MODELO
+' ==========================================
+
+' Relaciones de Agregados y Entidades Internas
+Profesor "1" *-- "0..*" TituloAcademico : posee >
+AsignacionDocente o-- NotaTecnica : contiene (opcional) >
+
+' Relaciones de Objetos de Valor en el Catálogo
+CatalogoAtinencias o-- NumeroAcuerdo : tiene >
+CatalogoAtinencias o-- NumeroGaceta : tiene >
+CatalogoAtinencias o-- DateRange : define >
+
+' Interacción del Servicio de Dominio
+ServicioVerificacionAtinencia ..> Profesor : procesa >
+ServicioVerificacionAtinencia ..> CatalogoAtinencias : consulta >
+
+' Relaciones de Repositorios con sus Raíces de Agregado
+ProfesorRepositorioInterface ..> Profesor : gestiona >
+CatalogoAtinenciasRepositorioInterface ..> CatalogoAtinencias : gestiona >
+AsignacionDocenteRepositorioInterface ..> AsignacionDocente : gestiona >
+
+@enduml
