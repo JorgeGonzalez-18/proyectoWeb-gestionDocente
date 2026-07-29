@@ -12,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('catalogo_atinencias', function (Blueprint $table) {
-            $table->id(primaryKey: true);
-            $table->timestamps();
+            $table->id();
             $table->CarreraId('carrera_id');
             $table->CodigoCurso('codigo_curso');
             $table->integer('version');
@@ -22,6 +21,7 @@ return new class extends Migration
             $table->date('periodo_validez_inicio');
             $table->date('periodo_validez_fin');
             $table->json('especializaciones_atinentes')->nullable();
+            $table->timestamps();
         });
     }
 

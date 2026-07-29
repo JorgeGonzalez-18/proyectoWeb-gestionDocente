@@ -12,13 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('profesors', function (Blueprint $table) {
-            $table->id(primaryKey: true);
-            $table->timestamps();
+            $table->id();  
             $table->integer('cedula')->unique();
-            $table->string('correo')->unique();
             $table->string('nombre');
             $table->string('primer_apellido');
             $table->string('segundo_apellido');
+            $table->string('correo')->unique();
+            $table->timestamps();
+            
 
         });
     }

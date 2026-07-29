@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('titulo_academicos', function (Blueprint $table) {
-            $table->id(primaryKey: true);
-            $table->timestamps();
+            $table->id();
             $table->integer('profesor_id');
             $table->NivelTituloEnum('nivel_titulo');
             $table->string('institucion');
             $table->integer('anio_graduacion');
             $table->string('area_especializacion');
+            $table->timestamps();
         });
     }
 

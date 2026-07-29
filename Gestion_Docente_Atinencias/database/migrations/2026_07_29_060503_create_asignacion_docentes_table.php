@@ -12,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('asignacion_docentes', function (Blueprint $table) {
-            $table->id(primaryKey: true);
-            $table->timestamps();
+            $table->id();
             $table->integer(foreignId: 'profesor_id');
             $table->unsignedInteger('catalogo_id')->nullable();
             $table->CodigoCurso('codigo_curso');
@@ -26,6 +25,7 @@ return new class extends Migration
             $table->string ('nota_tecnica_pdf_path')->nullable();
             $table->date ('nota_tecnica_fecha_limite')->nullable();
             $table->EstadoNotaTecnicaEnum ('nota_tecnica_estado')->nullable();
+            $table->timestamps();
         });
     }
 
