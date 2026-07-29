@@ -9,19 +9,19 @@ class AsignacionDocente extends Model
 {
     /** @use HasFactory<\Database\Factories\AsignacionDocenteFactory> */
     use HasFactory;
-    protected $fillable =[
+  protected $fillable = [
         'profesor_id',
-        'catalogo_id',
-        'codigo_curso',
-        'carrera_id',
+        'curso_id',
         'grupo_id',
-        'inicio_cuatrimestre',
+        'modalidad',
+        'horario',
+        'cupo',
+        'aula',
+        'recursos',
+        'tiene_atinencia',
+        'observaciones',
         'estado',
-        'version_catalogo_aplicada',
-        'provisional_validez_futura',
-        'nota_tecnica_pdf_path',
-        'nota_tecnica_fecha_limite',
-        'nota_tecnica_estado',
+        'inicio_cuatrimestre_fecha',
     ];
     protected function casts(): array{
         return[

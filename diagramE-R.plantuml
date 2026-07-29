@@ -49,6 +49,24 @@ entity "asignaciones_docentes" as asignacion #E3F2FD {
   * nota_tecnica_fecha_limite : DateTime <<nullable>>
   * nota_tecnica_estado : EstadoNotaTecnicaEnum <<nullable>>
 }
+entity "carreras" as carrera #E3F2FD{
+  id : String <<PK>>
+  ----
+  codigo: String
+  nombre: String
+  sede: String
+}
+
+entity "cursos" as curso #E3F2FD{
+  id : String <<PK>>
+  ----
+  carrera_id : CarreraId <<FK>>
+  codigo: String
+  nombre: String
+  creditos: int
+
+}
+
 
 entity "usuario" as user #FFF3E0{
   * id : INT <<PK>>
@@ -63,7 +81,7 @@ entity "usuario" as user #FFF3E0{
 entity "roles" as rol #FFF3E0 {
   * id : INT <<PK>>
   --
-  * name : VARCHAR(50)
+   name : VARCHAR(50)
   * guard_name : VARCHAR(50)
 }
 

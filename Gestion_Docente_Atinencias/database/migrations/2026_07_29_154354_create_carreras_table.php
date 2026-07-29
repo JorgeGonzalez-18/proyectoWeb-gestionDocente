@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('titulo_academicos', function (Blueprint $table) {
+        Schema::create('carreras', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('profesor_id')->constrained('profesors')->cascadeOnDelete();
-            $table->string('nivel_titulo');
-            $table->string('institucion');
-            $table->integer('anio_graduacion');
-            $table->string('area_especializacion');
+            $table->string('codigo',10);
+            $table->string('nombre',100);
+            $table->string('sede',100)->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('titulo_academicos');
+        Schema::dropIfExists('carreras');
     }
 };

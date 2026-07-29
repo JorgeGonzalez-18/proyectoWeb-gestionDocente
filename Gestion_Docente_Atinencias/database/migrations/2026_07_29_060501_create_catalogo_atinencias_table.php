@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('catalogo_atinencias', function (Blueprint $table) {
             $table->id();
-            $table->CarreraId('carrera_id');
-            $table->CodigoCurso('codigo_curso');
-            $table->integer('version');
-            $table->NumeroAcuerdo('acuerdo_consejo');
-            $table->Numerogaceta('numero_gaceta');
+
+            $table->foreignId('carrera_id')->constrained('carreras')->cascadeOnDelete();
+            $table->string('codigo_curso');
+            $table->string('acuerdo_consejo');
+            $table->string('numero_gaceta');
             $table->date('periodo_validez_inicio');
             $table->date('periodo_validez_fin');
+            $table->integer('version');
             $table->json('especializaciones_atinentes')->nullable();
             $table->timestamps();
         });
