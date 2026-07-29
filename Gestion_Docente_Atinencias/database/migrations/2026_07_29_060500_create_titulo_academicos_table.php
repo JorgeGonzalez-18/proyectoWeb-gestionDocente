@@ -12,8 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('titulo_academicos', function (Blueprint $table) {
-            $table->id();
+            $table->id(primaryKey: true);
             $table->timestamps();
+            $table->integer('profesor_id');
+            $table->NivelTituloEnum('nivel_titulo');
+            $table->string('institucion');
+            $table->integer('anio_graduacion');
+            $table->string('area_especializacion');
         });
     }
 
