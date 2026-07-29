@@ -11,6 +11,7 @@ class Profesor extends Model
     use HasFactory;
     protected $fillable =[
         'cedula',
+        'correo',
         'nombre',
         'primer_apellido',
         'segundo_apellido',

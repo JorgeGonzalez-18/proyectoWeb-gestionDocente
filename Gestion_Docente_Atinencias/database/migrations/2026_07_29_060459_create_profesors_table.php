@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id(primaryKey: true);
             $table->timestamps();
             $table->integer('cedula')->unique();
+            $table->string('correo')->unique();
             $table->string('nombre');
             $table->string('primer_apellido');
             $table->string('segundo_apellido');

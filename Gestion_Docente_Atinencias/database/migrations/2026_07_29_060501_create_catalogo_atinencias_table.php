@@ -21,8 +21,7 @@ return new class extends Migration
             $table->Numerogaceta('numero_gaceta');
             $table->date('periodo_validez_inicio');
             $table->date('periodo_validez_fin');
-            $table->json('especializaciones_atentes')->nullable();
-
+            $table->json('especializaciones_atinentes')->nullable();
         });
     }
 

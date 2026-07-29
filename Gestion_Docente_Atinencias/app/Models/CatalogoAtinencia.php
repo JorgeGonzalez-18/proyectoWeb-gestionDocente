@@ -23,6 +23,7 @@ class CatalogoAtinencia extends Model
         return[
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
+            'especializaciones_atinentes' => 'array',
          ];
     }
 }
