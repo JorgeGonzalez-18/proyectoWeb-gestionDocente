@@ -9,4 +9,16 @@ class Profesor extends Model
 {
     /** @use HasFactory<\Database\Factories\ProfesorFactory> */
     use HasFactory;
+    protected $fillable =[
+        'cedula',
+        'nombre',
+        'primer_apellido',
+        'segundo_apellido',
+    ];
+    protected function casts(): array{
+        return[
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+         ];
+    }
 }
